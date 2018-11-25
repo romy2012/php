@@ -1,0 +1,28 @@
+问题所在：！” 最后显示成了１
+原因：字符的无边界性导致替换异常。
+解决思路：全部替换为UTF-8，利用UTF-8的字符边界性
+
+
+
+/**
+ * str_replace增强函数 
+ * @param string $search 被替换的字符串
+ * @param string $replace 替换目标字符串
+ * @param string $subject 要处理的字符串
+ * @param string $str_encode 要处理的字符串的编码 默认为gbk
+ * @return string
+ */
+function str_replace_plus($search,$replace,$subject,$str_encode='gbk'){
+    $str_encode = strtoupper($str_encode);
+    if($str_encode == 'UTF-8'){
+        $subject = str_replace($search, $replace, $subject);
+    }else{
+        $search = iconv($str_encode,'UTF-8//IGNORE',$search);
+        $replace = iconv($str_encode,'UTF-8//IGNORE',$replace);
+        $subject = iconv($str_encode,'UTF-8//IGNORE',$subject);
+        $subject = str_replace($search, $replace, $subject);
+        $str_encode.= '//IGNORE';
+        $subject = iconv('UTF-8',$str_encode,$subject);
+    }
+    return $subject;
+}
