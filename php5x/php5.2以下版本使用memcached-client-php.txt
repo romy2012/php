@@ -1,0 +1,1 @@
+php5.2以下版本使用memcached-client-php
